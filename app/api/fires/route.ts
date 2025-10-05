@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import { prismaMongo } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
@@ -57,7 +57,7 @@ export async function GET(req: Request) {
     }
 
     // ✅ Consultar todos los campos del modelo FireRecord
-    const rows = await prisma.fireRecord.findMany({
+    const rows = await prismaMongo.fireRecord.findMany({
       where,
       orderBy: { acq_date: "asc" },
       take: limit,

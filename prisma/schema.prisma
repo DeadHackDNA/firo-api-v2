@@ -33,3 +33,43 @@ model FireRecord {
 
   @@index([acq_date])
 }
+
+model User {
+  // Mongo id
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  name      String?
+  email     String?  @unique
+  createdAt DateTime @default(now())
+}
+
+model Conversation {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String    @db.ObjectId
+  startTime DateTime  @default(now())
+  endTime   DateTime?
+  context   Json?
+}
+
+model Message {
+  id             String     @id @default(auto()) @map("_id") @db.ObjectId
+  conversationId String     @db.ObjectId
+  sender         SenderType
+  content        String
+  intent         String?
+  entities       Json?
+  sentiment      String? // opcional: positivo, negativo, neutro
+  createdAt      DateTime   @default(now())
+}
+
+enum SenderType {
+  USER
+  BOT
+}
+
+model AnswerLLM {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  question  String
+  answer    String
+  createdAt DateTime @default(now())
+  userId    String
+}

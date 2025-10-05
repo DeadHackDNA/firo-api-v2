@@ -1,6 +1,6 @@
 import fs from "fs";
 import csv from "csv-parser";
-import { prisma } from "../../lib/prisma";
+import { prismaMongo } from "../../lib/prisma";
 
 async function main() {
   console.time("🔥 Import Time");
@@ -43,7 +43,7 @@ async function main() {
     // Si el lote está completo, insertamos y limpiamos
     if (batch.length >= BATCH_SIZE) {
       try {
-        await prisma.fireRecord.createMany({
+        await prismaMongo.fireRecord.createMany({
           data: batch,
         });
         totalInserted += batch.length;
@@ -53,7 +53,7 @@ async function main() {
       } catch (err) {
         console.error("⚠️ Error inserting batch:", err);
         // intenta reconectar si la conexión se cae
-        await prisma.$disconnect();
+        await prismaMongo.$disconnect();
         await new Promise((r) => setTimeout(r, 2000));
       }
     }
@@ -61,7 +61,7 @@ async function main() {
 
   // Inserta el último lote restante
   if (batch.length > 0) {
-    await prisma.fireRecord.createMany({
+    await prismaMongo.fireRecord.createMany({
       data: batch,
     });
     totalInserted += batch.length;
@@ -70,7 +70,7 @@ async function main() {
   console.log(`🎯 Import completed: ${totalInserted.toLocaleString()} records`);
   console.timeEnd("🔥 Import Time");
 
-  await prisma.$disconnect();
+  await prismaMongo.$disconnect();
 }
 
 main()
@@ -78,5 +78,5 @@ main()
     console.error("❌ Import failed:", e);
   })
   .finally(async () => {
-    await prisma.$disconnect();
+    await prismaMongo.$disconnect();
   });

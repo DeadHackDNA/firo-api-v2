@@ -6,7 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate && prisma generate --schema=./prisma-postgres/schema.prisma"
   },
   "dependencies": {
     "@prisma/client": "^6.16.3",
