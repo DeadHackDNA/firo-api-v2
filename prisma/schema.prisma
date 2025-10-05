@@ -40,6 +40,9 @@ model User {
   name      String?
   email     String?  @unique
   createdAt DateTime @default(now())
+
+  conversations Conversation[]
+  answersLLM    AnswerLLM[]
 }
 
 model Conversation {
@@ -48,6 +51,9 @@ model Conversation {
   startTime DateTime  @default(now())
   endTime   DateTime?
   context   Json?
+
+  user     User      @relation(fields: [userId], references: [id])
+  messages Message[]
 }
 
 model Message {
@@ -59,6 +65,8 @@ model Message {
   entities       Json?
   sentiment      String? // opcional: positivo, negativo, neutro
   createdAt      DateTime   @default(now())
+
+  conversation Conversation @relation(fields: [conversationId], references: [id])
 }
 
 enum SenderType {
@@ -71,5 +79,6 @@ model AnswerLLM {
   question  String
   answer    String
   createdAt DateTime @default(now())
-  userId    String
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
 }

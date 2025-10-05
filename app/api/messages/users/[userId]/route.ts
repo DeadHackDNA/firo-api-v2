@@ -13,7 +13,9 @@ export async function GET(req: Request, { params }: Params) {
       where: { userId },
       include: {
         messages: {
-          orderBy: { createdAt: "asc" },
+          orderBy: {
+            createdAt: "desc",
+          },
         },
       },
       orderBy: { startTime: "desc" },
