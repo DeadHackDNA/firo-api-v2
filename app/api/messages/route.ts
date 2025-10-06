@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { userId, sender, content, intent, entities, sentiment } = body;
+    const { userId, sender, content, intent, entities, sentiment, contentHidden } = body;
 
     if (!userId || !sender || !content) {
       return NextResponse.json(
@@ -32,6 +32,7 @@ export async function POST(req: Request) {
         conversationId: conversation.id,
         sender,
         content,
+        contentHidden,
         intent,
         entities,
         sentiment,
@@ -41,7 +42,7 @@ export async function POST(req: Request) {
     // Si el mensaje proviene del usuario, obtener respuesta del LLM
     let botMessage = null;
     if (sender === "USER") {
-      const aiText = await getGeminiResponse(content);
+      const aiText = await getGeminiResponse(contentHidden + content);
 
       botMessage = await prismaMongo.message.create({
         data: {

@@ -61,6 +61,7 @@ model Message {
   conversationId String     @db.ObjectId
   sender         SenderType
   content        String
+  contentHidden  String?
   intent         String?
   entities       Json?
   sentiment      String? // opcional: positivo, negativo, neutro
